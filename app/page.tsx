@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-
+import { ThemeToggle } from '@/components/theme-toggle'
 export default function LandingPage() {
   const router = useRouter()
   const [animate, setAnimate] = useState(false)

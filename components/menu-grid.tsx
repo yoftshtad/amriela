@@ -20,10 +20,10 @@ export function MenuGrid({ items }: MenuGridProps) {
       {items.map((item) => (
         <div
           key={item.id}
-          className="bg-gradient-to-b from-[#202020] to-[#0C0C0C] rounded-lg overflow-hidden p-1.5 flex flex-col"
+          className="bg-gradient-to-b from-secondary to-background rounded-lg overflow-hidden p-1.5 flex flex-col border border-border hover:border-[#ffbc26] transition-all duration-300"
         >
           {/* Image Container - Centered at top */}
-          <div className="relative w-full h-28 md:h-24 lg:h-32 bg-[#222222] rounded-lg overflow-hidden mb-3 flex items-center justify-center">
+          <div className="relative w-full h-28 md:h-24 lg:h-32 bg-muted rounded-lg overflow-hidden mb-3 flex items-center justify-center">
             <Image
               src={item.image_url || '/'}
               alt={item.name}
@@ -35,10 +35,10 @@ export function MenuGrid({ items }: MenuGridProps) {
 
           {/* Content - Left Aligned */}
           <div className="flex-1">
-            <h3 className="text-xs md:text-sm lg:text-base font-bold text-[#fff5e4] mb-1 font-serif">
+            <h3 className="text-xs md:text-sm lg:text-base font-bold text-foreground mb-1 font-serif">
               {item.name}
             </h3>
-            <p className="text-[10px] md:text-xs lg:text-sm text-[#999999] mb-2 font-sans">
+            <p className="text-[10px] md:text-xs lg:text-sm text-muted-foreground mb-2 font-sans">
               {item.description}
             </p>
             <span className="text-xs md:text-sm lg:text-base font-bold text-[#ffbc26]">
