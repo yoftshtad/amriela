@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { MenuGrid } from '@/components/menu-grid'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { Search, Filter, MapPin, Facebook, Instagram, Twitter } from 'lucide-react'
+import { Search, Filter, MapPin, Facebook, Instagram, Twitter , Phone} from 'lucide-react'
 import { useTheme } from 'next-themes'
 
 interface MenuItem {
@@ -82,9 +82,9 @@ export default function MenuPage() {
       <header className="sticky top-0 z-50 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto">
           {/* Top Section - Logo and Search */}
-          <div className="py-4 px-6">
+          <div className="py-2 px-6">
             {/* Logo and Toggle Row - Aligned horizontally */}
-            <div className="flex justify-between items-center">
+            <div className="flex  justify-between items-center">
               <div className="relative h-17 w-30">
                 <Image
                   src={logoSrc}
@@ -94,27 +94,7 @@ export default function MenuPage() {
                   priority
                 />
               </div>
-              <ThemeToggle />
-            </div>
-
-            {/* Tagline */}
-            <div className="mb-4 flex flex-col gap-2">
-              <p className="text-[25px] font-serif text-foreground font-bold leading-snug mb-2">
-                Meet Amriela Pastries
-              </p>
-              <p className="text-xs w-[70%] font-sans text-muted-foreground leading-snug">
-                A modern café experience with artisanal pastries and rich coffee.
-              </p>
-            </div>
-
-            {/* Location Line */}
-            <div className="flex items-center gap-2 mb-4">
-              <MapPin className="w-4 h-4 text-[#ffbc26]" />
-              <span className="text-xs text-foreground">Mexico, Debrework</span>
-            </div>
-
-            {/* Search Bar and Filter Button Line */}
-            <div className="flex gap-2">
+              <div className="flex flex-row gap-5">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <input
@@ -122,15 +102,25 @@ export default function MenuPage() {
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 text-sm rounded-lg border border-input bg-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#ffbc26]"
+                  className="w-90 pl-10 pr-3 py-2 text-sm rounded-lg border border-input bg-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#ffbc26]"
                 />
               </div>
-
-              {/* Filter Button */}
-              <button className="p-2 rounded-lg bg-secondary border border-border text-foreground hover:border-[#ffbc26] transition-colors flex-shrink-0">
-                <Filter className="w-4 h-4" />
-              </button>
+              <ThemeToggle />
+              </div>
             </div>
+
+            {/* Tagline */}
+            <div className="mb-2 flex flex-col gap-2">
+              <p className="text-[25px] font-serif text-foreground font-bold leading-snug mb-2">
+                Meet Amriela Pastries
+              </p>
+              
+            </div>
+
+            
+
+            {/* Search Bar and Filter Button Line */}
+            
           </div>
 
           {/* Categories Section */}
@@ -215,8 +205,23 @@ export default function MenuPage() {
             </a>
           </div>
 
+          {/* Location Line */}
+          <div className='flex gap-5 justify-center'>
+            <div className="flex items-center gap-2 mb-4">
+              <MapPin className="w-4 h-4 text-[#ffbc26]" />
+              <span className="text-xs text-foreground">Mexico, Debrework</span>
+            </div>
+            <div className="flex items-center gap-2 mb-4">
+              <Phone className="w-4 h-4 text-[#ffbc26]" />
+              <span className="text-xs text-foreground">+251 9** *** ***</span>
+            </div>
+            </div>
+
           {/* Copyright */}
-          <div className="text-center">
+          <div className="text-center flex flex-col gap-2">
+            <p className="text-xs font-sans text-muted-foreground leading-snug">
+                A modern café experience with artisanal pastries and rich coffee.
+              </p>
             <p className="text-xs text-muted-foreground">
               © 2026 Amriela Pastries. All rights reserved.
             </p>
