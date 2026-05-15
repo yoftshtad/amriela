@@ -95,7 +95,7 @@ export default function MenuPage() {
                 />
               </div>
               <div className="flex flex-row gap-5">
-              <div className="relative flex-1 min-w-[300px]">
+              <div className="relative flex-1 min-w-[100px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <input
                   type="text"
