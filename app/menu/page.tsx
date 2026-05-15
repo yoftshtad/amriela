@@ -127,7 +127,7 @@ export default function MenuPage() {
               </div>
 
               {/* Filter Button */}
-              <button className="p-2 rounded-lg bg-[#1b1b1b] border border-border text-foreground hover:border-[#ffbc26] transition-colors flex-shrink-0">
+              <button className="p-2 rounded-lg bg-secondary border border-border text-foreground hover:border-[#ffbc26] transition-colors flex-shrink-0">
                 <Filter className="w-4 h-4" />
               </button>
             </div>
