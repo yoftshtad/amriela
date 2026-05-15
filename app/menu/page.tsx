@@ -112,8 +112,8 @@ export default function MenuPage() {
             <p className="text-[22px] font-serif text-foreground font-bold leading-snug">
               Meet Amriela Pastries
             </p>
-            <p className="text-xs w-[70%] font-sans text-muted-foreground leading-snug">
-              A modern café experience with artisanal pastries and rich coffee.
+            <p className="text-xs font-sans text-muted-foreground leading-snug">
+              A modern café experience.
             </p>
           </div>
         </div>
