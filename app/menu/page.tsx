@@ -76,7 +76,7 @@ export default function MenuPage() {
   return (
     <main className="min-h-screen bg-background w-full relative">
       {/* Gradient decoration at top left */}
-      <div className="absolute top-0 left-0 w-64 h-64  rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+      <div className="absolute top-0 left-0 w-64 h-64 rounded-full blur-3xl opacity-20 pointer-events-none"></div>
 
       {/* Header */}
       <header className="sticky top-0 z-50 bg-background border-b border-border">
@@ -84,7 +84,7 @@ export default function MenuPage() {
           {/* Top Section - Logo and Search */}
           <div className="py-2 px-6">
             {/* Logo and Toggle Row - Aligned horizontally */}
-            <div className="flex  justify-between items-center">
+            <div className="flex justify-between items-center">
               <div className="relative h-17 w-30">
                 <Image
                   src={logoSrc}
@@ -95,14 +95,14 @@ export default function MenuPage() {
                 />
               </div>
               <div className="flex flex-row gap-5">
-              <div className="relative flex-1">
+              <div className="relative flex-1 min-w-[300px]">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <input
                   type="text"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-90 pl-10 pr-3 py-2 text-sm rounded-lg border border-input bg-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#ffbc26]"
+                  className="w-full pl-10 pr-3 py-2 text-sm rounded-lg border border-input bg-input text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#ffbc26]"
                 />
               </div>
               <ThemeToggle />
