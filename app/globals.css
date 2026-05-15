@@ -27,9 +27,9 @@
 }
 
 .dark {
-  --background: #222222;
+  --background: #000;
   --foreground: #fff5e4;
-  --card: #222222;
+  --card: #000;
   --card-foreground: #fff5e4;
   --popover: #222222;
   --popover-foreground: #fff5e4;
@@ -43,7 +43,7 @@
   --accent-foreground: #222222;
   --destructive: #ff6b6b;
   --destructive-foreground: #fff5e4;
-  --border: #444444;
+  --border: #181818;
   --input: #333333;
   --ring: #ffbc26;
 }

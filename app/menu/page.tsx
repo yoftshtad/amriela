@@ -85,7 +85,7 @@ export default function MenuPage() {
           <div className="py-4 px-6">
             {/* Logo and Toggle Row - Aligned horizontally */}
             <div className="flex justify-between items-center mb-4">
-              <div className="relative h-22 w-22">
+              <div className="relative h-30 w-30">
                 <Image
                   src={logoSrc}
                   alt="Amriela Pastries"
