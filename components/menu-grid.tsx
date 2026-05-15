@@ -23,7 +23,7 @@ export function MenuGrid({ items }: MenuGridProps) {
           className="bg-gradient-to-b from-secondary to-background rounded-lg overflow-hidden p-1.5 flex flex-col border border-border hover:border-[#ffbc26] transition-all duration-300"
         >
           {/* Image Container - Centered at top */}
-          <div className="relative w-full h-28 md:h-24 lg:h-32 bg-muted rounded-lg overflow-hidden mb-3 flex items-center justify-center">
+          <div className="relative w-full h-28 md:h-24 lg:h-32 bg-[#1b1b1b] rounded-lg overflow-hidden mb-3 flex items-center justify-center">
             <Image
               src={item.image_url || '/'}
               alt={item.name}

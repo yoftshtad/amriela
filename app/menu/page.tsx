@@ -76,16 +76,16 @@ export default function MenuPage() {
   return (
     <main className="min-h-screen bg-background w-full relative">
       {/* Gradient decoration at top left */}
-      <div className="absolute top-0 left-0 w-64 h-64 bg-gradient-radial from-[#8B6F47] via-[#5a4a33] to-transparent rounded-full blur-3xl opacity-20 pointer-events-none"></div>
+      <div className="absolute top-0 left-0 w-64 h-64  rounded-full blur-3xl opacity-20 pointer-events-none"></div>
 
       {/* Header */}
-      <header className="sticky top-0 z-40 bg-background border-b border-border">
+      <header className="sticky top-0 z-50 bg-background border-b border-border">
         <div className="max-w-7xl mx-auto">
           {/* Top Section - Logo and Search */}
           <div className="py-4 px-6">
             {/* Logo and Toggle Row - Aligned horizontally */}
-            <div className="flex justify-between items-center mb-4">
-              <div className="relative h-30 w-30">
+            <div className="flex justify-between items-center">
+              <div className="relative h-17 w-30">
                 <Image
                   src={logoSrc}
                   alt="Amriela Pastries"
@@ -127,7 +127,7 @@ export default function MenuPage() {
               </div>
 
               {/* Filter Button */}
-              <button className="p-2 rounded-lg bg-secondary border border-border text-foreground hover:border-[#ffbc26] transition-colors flex-shrink-0">
+              <button className="p-2 rounded-lg bg-[#1b1b1b] border border-border text-foreground hover:border-[#ffbc26] transition-colors flex-shrink-0">
                 <Filter className="w-4 h-4" />
               </button>
             </div>
