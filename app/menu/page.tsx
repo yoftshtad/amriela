@@ -6,6 +6,8 @@ import { MenuGrid } from '@/components/menu-grid'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { Search, MapPin, Facebook, Instagram, Twitter, Phone } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { FaTiktok } from "react-icons/fa6";
+import { SiGmail } from "react-icons/si";
 
 interface MenuItem {
   id: number
@@ -68,7 +70,7 @@ export default function MenuPage() {
   })
 
   // Determine which logo to show based on theme
-  const logoSrc = !mounted ? '/logo.jpg' : theme === 'dark' ? '/logo.jpg' : '/logo.jpg'
+  const logoSrc = !mounted ? '/logo.jpg' : theme === 'dark' ? '/logo.jpg' : '/light logo.png'
   // CHANGE THE LOGO PATHS ABOVE ^^^
   // For dark mode logo: change the first '/logo.jpg' to your dark mode logo path
   // For light mode logo: change the second '/logo.jpg' to your light mode logo path
@@ -112,9 +114,11 @@ export default function MenuPage() {
             <p className="text-[22px] font-serif text-foreground font-bold leading-snug">
               Meet Amriela Pastries
             </p>
+            
             <p className="text-xs font-sans text-muted-foreground leading-snug">
               A modern café experience.
             </p>
+            
           </div>
         </div>
 
@@ -189,14 +193,14 @@ export default function MenuPage() {
         <div className="px-6 py-6">
           {/* Social Links */}
           <div className="flex items-center justify-center gap-6 mb-4">
-            <a href="#" className="text-foreground hover:text-[#ffbc26] transition-colors">
-              <Facebook className="w-5 h-5" />
+            <a href="https://www.tiktok.com/@amrielapastries?_r=1&_t=ZT-96P48s34f8g" className="text-foreground hover:text-[#ffbc26] transition-colors">
+              <FaTiktok  className="w-5 h-5" />
             </a>
-            <a href="#" className="text-foreground hover:text-[#ffbc26] transition-colors">
+            <a href="https://www.instagram.com/amrielapastries?igsh=dGR1N29sd2U3cXY0" className="text-foreground hover:text-[#ffbc26] transition-colors">
               <Instagram className="w-5 h-5" />
             </a>
-            <a href="#" className="text-foreground hover:text-[#ffbc26] transition-colors">
-              <Twitter className="w-5 h-5" />
+            <a href="amriellatradingplc@gmail.com" className="text-foreground hover:text-[#ffbc26] transition-colors">
+              <SiGmail  className="w-5 h-5" />
             </a>
           </div>
 
@@ -204,11 +208,11 @@ export default function MenuPage() {
           <div className="flex gap-5 justify-center">
             <div className="flex items-center gap-2 mb-4">
               <MapPin className="w-4 h-4 text-[#ffbc26]" />
-              <span className="text-xs text-foreground">Mexico, Debrework</span>
+              <span className="text-xs text-foreground">Tirsit Apartment, Kore Square</span>
             </div>
             <div className="flex items-center gap-2 mb-4">
               <Phone className="w-4 h-4 text-[#ffbc26]" />
-              <span className="text-xs text-foreground">+251 9** *** ***</span>
+              <span className="text-xs text-foreground">+251 968 204 549</span>
             </div>
           </div>
 
