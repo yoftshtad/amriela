@@ -187,6 +187,7 @@ export default function MenuPage() {
           )}
         </>
       )}
+      {/* something cool*/}
 
       {/* Footer */}
       <footer className="bg-background border-t border-border mt-8">
