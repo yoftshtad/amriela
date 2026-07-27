@@ -1,5 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 
+// Disable static caching so category updates/deletions reflect immediately
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   try {
     const supabase = await createClient()

@@ -25,11 +25,15 @@ export function MenuGrid({ items }: MenuGridProps) {
           {/* Image Container - Centered at top */}
           <div className="relative w-full h-28 md:h-24 lg:h-32 bg-muted rounded-lg overflow-hidden mb-3 flex items-center justify-center">
             <Image
-              src={item.image_url || '/'}
+              src={item.image_url || '/favicon.jpg'}
               alt={item.name}
               fill
               loading="eager"
               className="object-cover hover:scale-110 transition-transform duration-300"
+              onError={(e) => {
+                const img = e.target as HTMLImageElement
+                img.src = '/favicon.jpg'
+              }}
             />
           </div>
 

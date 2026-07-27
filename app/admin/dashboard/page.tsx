@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { Trash2, Plus } from 'lucide-react'
+import { Trash2, Plus, Pencil, X } from 'lucide-react'
 
 interface Category {
   id: number
@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const router = useRouter()
   const [categories, setCategories] = useState<Category[]>([])
   const [items, setItems] = useState<MenuItem[]>([])
+  const [editingId, setEditingId] = useState<number | null>(null)
   const [formData, setFormData] = useState({
     category_id: '',
     name: '',
@@ -71,7 +72,6 @@ export default function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error fetching data:', error)
-      // Set empty arrays on error
       setCategories([])
       setItems([])
     }
@@ -94,13 +94,40 @@ export default function AdminDashboard() {
     }
   }
 
-  const handleAddItem = async (e: React.FormEvent) => {
+  const handleEditClick = (item: MenuItem) => {
+    setEditingId(item.id)
+    setFormData({
+      category_id: item.category_id.toString(),
+      name: item.name,
+      description: item.description || '',
+      price: item.price.toString(),
+      image_url: item.image_url || '',
+    })
+    setImageFile(null)
+    setMessage('')
+  }
+
+  const handleCancelEdit = () => {
+    setEditingId(null)
+    setFormData({
+      category_id: categories.length > 0 ? categories[0].id.toString() : '',
+      name: '',
+      description: '',
+      price: '',
+      image_url: '',
+    })
+    setImageFile(null)
+    setMessage('')
+  }
+
+  const handleSubmitItem = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setMessage('')
 
     try {
-      let imageUrl = '/cupcake.png'
+      // Use favicon.jpg as fallback if no image is uploaded or set
+      let imageUrl = formData.image_url || '/favicon.jpg'
 
       // Upload image if file is selected
       if (imageFile) {
@@ -120,8 +147,12 @@ export default function AdminDashboard() {
         imageUrl = uploadData.path
       }
 
-      const response = await fetch('/api/menu-items', {
-        method: 'POST',
+      const isEditing = editingId !== null
+      const url = isEditing ? `/api/menu-items/${editingId}` : '/api/menu-items'
+      const method = isEditing ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           category_id: parseInt(formData.category_id),
@@ -133,19 +164,11 @@ export default function AdminDashboard() {
       })
 
       if (!response.ok) {
-        throw new Error('Failed to add item')
+        throw new Error(isEditing ? 'Failed to update item' : 'Failed to add item')
       }
 
-      setMessage('Item added successfully!')
-      setFormData({
-        category_id: formData.category_id,
-        name: '',
-        description: '',
-        price: '',
-        image_url: '',
-      })
-      setImageFile(null)
-
+      setMessage(isEditing ? 'Item updated successfully!' : 'Item added successfully!')
+      handleCancelEdit()
       fetchData()
     } catch (error) {
       setMessage('Error: ' + (error instanceof Error ? error.message : 'Unknown error'))
@@ -165,14 +188,17 @@ export default function AdminDashboard() {
       const data = await response.json()
 
       if (!response.ok) {
-        console.error('[v0] Delete error response:', data)
+        console.error('Delete error response:', data)
         throw new Error(data.error || 'Failed to delete item')
       }
 
       setMessage('Item deleted successfully!')
+      if (editingId === itemId) {
+        handleCancelEdit()
+      }
       fetchData()
     } catch (error) {
-      console.error('[v0] Delete error:', error)
+      console.error('Delete error:', error)
       setMessage('Error: ' + (error instanceof Error ? error.message : 'Unknown error'))
     }
   }
@@ -202,13 +228,24 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Two Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Add Item Form - Left Column */}
+          {/* Add / Edit Item Form - Left Column */}
           <div className="lg:col-span-1">
             <div className="bg-[#222222] border border-[#444444] rounded-2xl p-6 sticky top-8">
-              <h2 className="text-2xl font-bold text-[#ffbc26] mb-6 flex items-center gap-2">
-                <Plus className="w-6 h-6" />
-                Add Menu Item
-              </h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold text-[#ffbc26] flex items-center gap-2">
+                  {editingId ? <Pencil className="w-6 h-6 text-[#66cc66]" /> : <Plus className="w-6 h-6" />}
+                  {editingId ? 'Edit Menu Item' : 'Add Menu Item'}
+                </h2>
+                {editingId && (
+                  <button
+                    onClick={handleCancelEdit}
+                    className="p-1 text-[#999999] hover:text-white rounded-lg transition-colors flex items-center gap-1 text-xs"
+                    title="Cancel Edit"
+                  >
+                    <X className="w-4 h-4" /> Cancel
+                  </button>
+                )}
+              </div>
 
               {/* Message */}
               {message && (
@@ -223,7 +260,7 @@ export default function AdminDashboard() {
                 </div>
               )}
 
-              <form onSubmit={handleAddItem} className="space-y-4">
+              <form onSubmit={handleSubmitItem} className="space-y-4">
                 {/* Category Select */}
                 <div>
                   <label className="block text-sm font-medium text-[#fff5e4] mb-2">
@@ -294,7 +331,7 @@ export default function AdminDashboard() {
                 {/* Image Upload */}
                 <div>
                   <label className="block text-sm font-medium text-[#fff5e4] mb-2">
-                    Upload Image (Optional)
+                    Upload Image {editingId ? '(Optional - Keep current if empty)' : '(Optional)'}
                   </label>
                   <input
                     type="file"
@@ -305,16 +342,32 @@ export default function AdminDashboard() {
                   {imageFile && (
                     <p className="text-xs text-[#ffbc26] mt-1">Selected: {imageFile.name}</p>
                   )}
-                  <p className="text-xs text-[#999999] mt-1">If no image is selected, cupcake.png will be used</p>
+                  {!imageFile && formData.image_url && (
+                    <p className="text-xs text-[#999999] mt-1 truncate">Current image: {formData.image_url}</p>
+                  )}
+                  <p className="text-xs text-[#999999] mt-1">If no image is selected, favicon.jpg will be used</p>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-2 bg-[#ffbc26] text-[#222222] rounded-lg font-medium hover:bg-[#ffc940] transition-colors disabled:opacity-50"
-                >
-                  {loading ? 'Adding...' : 'Add Item'}
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className={`flex-1 py-2 ${
+                      editingId ? 'bg-[#66cc66] hover:bg-[#52b352]' : 'bg-[#ffbc26] hover:bg-[#ffc940]'
+                    } text-[#222222] rounded-lg font-medium transition-colors disabled:opacity-50`}
+                  >
+                    {loading ? (editingId ? 'Updating...' : 'Adding...') : editingId ? 'Update Item' : 'Add Item'}
+                  </button>
+                  {editingId && (
+                    <button
+                      type="button"
+                      onClick={handleCancelEdit}
+                      className="px-4 py-2 bg-[#333333] text-[#fff5e4] rounded-lg border border-[#444444] hover:bg-[#444444] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  )}
+                </div>
               </form>
             </div>
           </div>
@@ -329,22 +382,24 @@ export default function AdminDashboard() {
               <div className="space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto">
                 {items.map((item) => {
                   const category = categories.find((c) => c.id === item.category_id)
+                  const isBeingEdited = editingId === item.id
                   return (
                     <div
                       key={item.id}
-                      className="flex gap-4 p-4 border border-[#444444] rounded-lg hover:border-[#ffbc26] transition-colors"
+                      className={`flex gap-4 p-4 border rounded-lg transition-colors ${
+                        isBeingEdited ? 'border-[#66cc66] bg-[#2a332a]' : 'border-[#444444] hover:border-[#ffbc26]'
+                      }`}
                     >
                       {/* Image */}
                       <div className="relative w-20 h-20 flex-shrink-0 bg-[#333333] rounded-lg overflow-hidden">
                         <Image
-                          src={item.image_url}
+                          src={item.image_url || '/favicon.jpg'}
                           alt={item.name}
                           fill
                           className="object-cover"
                           onError={(e) => {
                             const img = e.target as HTMLImageElement
-                            img.src =
-                              'https://images.unsplash.com/photo-1559056199-641a0ac8b3f4?w=100&h=100&fit=crop'
+                            img.src = '/favicon.jpg'
                           }}
                         />
                       </div>
@@ -359,12 +414,22 @@ export default function AdminDashboard() {
                               {item.description}
                             </p>
                           </div>
-                          <button
-                            onClick={() => handleDeleteItem(item.id)}
-                            className="p-2 hover:bg-[#330000] rounded-lg transition-colors text-[#ff6b6b]"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center gap-1">
+                            <button
+                              onClick={() => handleEditClick(item)}
+                              className="p-2 hover:bg-[#003300] rounded-lg transition-colors text-[#66cc66]"
+                              title="Edit item"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeleteItem(item.id)}
+                              className="p-2 hover:bg-[#330000] rounded-lg transition-colors text-[#ff6b6b]"
+                              title="Delete item"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                         <p className="font-bold text-[#ffbc26] text-lg mt-2">
                           ${item.price.toFixed(2)}
