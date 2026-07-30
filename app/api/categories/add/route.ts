@@ -1,9 +1,8 @@
-import { createClient } from '@/lib/supabase/server'
+import { db } from '@/lib/turso'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient()
     const { name } = await request.json()
 
     if (!name || name.trim() === '') {
@@ -13,20 +12,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { data, error } = await supabase
-      .from('menu_categories')
-      .insert([{ name: name.trim(), display_order: 0 }])
-      .select()
+    const result = await db.execute({
+      sql: 'INSERT INTO menu_categories (name, display_order) VALUES (?, ?) RETURNING *',
+      args: [name.trim(), 0],
+    })
 
-    if (error) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 }
-      )
-    }
+    const newCategory = result.rows[0] ? { ...result.rows[0] } : null
 
-    return NextResponse.json(data[0], { status: 201 })
+    return NextResponse.json(newCategory, { status: 201 })
   } catch (error) {
+    console.error('Error adding category:', error)
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
