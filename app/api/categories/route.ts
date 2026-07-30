@@ -1,24 +1,15 @@
-import { createClient } from '@/lib/supabase/server'
+import { db } from '@/lib/turso'
 
-// Disable static caching so category updates/deletions reflect immediately
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const supabase = await createClient()
-
-    const { data, error } = await supabase
-      .from('menu_categories')
-      .select('id, name, display_order')
-      .order('display_order', { ascending: true })
-
-    if (error) {
-      throw error
-    }
-
-    return Response.json(data)
+    const result = await db.execute('SELECT * FROM menu_categories ORDER BY id ASC')
+    // Convert Turso rows to plain JS objects
+    const categories = result.rows.map((row) => ({ ...row }))
+    return Response.json(categories)
   } catch (error) {
-    console.error('Error fetching categories:', error)
-    return Response.json({ error: 'Failed to fetch categories' }, { status: 500 })
+    console.error('Error fetching categories from Turso:', error)
+    return Response.json([])
   }
 }

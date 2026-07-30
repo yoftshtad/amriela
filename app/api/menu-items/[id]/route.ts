@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { db } from '@/lib/turso'
 
 export async function PUT(
   request: Request,
@@ -15,41 +15,17 @@ export async function PUT(
     const body = await request.json()
     const { category_id, name, description, price, image_url } = body
 
-    const supabase = await createClient()
+    await db.execute({
+      sql: `UPDATE menu_items 
+            SET category_id = ?, name = ?, description = ?, price = ?, image_url = ?
+            WHERE id = ?`,
+      args: [category_id, name, description || '', price, image_url || '/favicon.jpg', itemId],
+    })
 
-    const updateData: Record<string, any> = {
-      category_id,
-      name,
-      description,
-      price,
-    }
-
-    if (image_url) {
-      updateData.image_url = image_url
-    }
-
-    const { data, error } = await supabase
-      .from('menu_items')
-      .update(updateData)
-      .eq('id', itemId)
-      .select()
-
-    if (error) {
-      console.error('Supabase update error:', error)
-      return Response.json(
-        { error: error.message || 'Failed to update menu item' },
-        { status: 500 }
-      )
-    }
-
-    return Response.json({ success: true, data })
+    return Response.json({ success: true })
   } catch (error) {
     console.error('Error updating menu item:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    return Response.json(
-      { error: errorMessage },
-      { status: 500 }
-    )
+    return Response.json({ error: 'Failed to update menu item' }, { status: 500 })
   }
 }
 
@@ -65,28 +41,14 @@ export async function DELETE(
       return Response.json({ error: 'Invalid item ID' }, { status: 400 })
     }
 
-    const supabase = await createClient()
-
-    const { error } = await supabase
-      .from('menu_items')
-      .delete()
-      .eq('id', itemId)
-
-    if (error) {
-      console.error('Supabase delete error:', error)
-      return Response.json(
-        { error: error.message || 'Failed to delete menu item' },
-        { status: 500 }
-      )
-    }
+    await db.execute({
+      sql: 'DELETE FROM menu_items WHERE id = ?',
+      args: [itemId],
+    })
 
     return Response.json({ success: true })
   } catch (error) {
     console.error('Error deleting menu item:', error)
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-    return Response.json(
-      { error: errorMessage },
-      { status: 500 }
-    )
+    return Response.json({ error: 'Failed to delete menu item' }, { status: 500 })
   }
 }

@@ -203,10 +203,11 @@ export default function AdminDashboard() {
     }
   }
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('admin_authenticated')
-    router.push('/menu')
-  }
+ const handleLogout = async () => {
+  sessionStorage.removeItem('admin_authenticated')
+  await fetch('/api/logout', { method: 'POST' })
+  router.push('/admin/login')
+}
 
   return (
     <main className="min-h-screen bg-[#222222]">

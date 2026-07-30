@@ -36,41 +36,43 @@ export default function MenuPage() {
     setMounted(true)
   }, [])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [categoriesRes, itemsRes] = await Promise.all([
-          fetch('/api/categories', { cache: 'no-store' }),
-          fetch('/api/menu-items', { cache: 'no-store' }),
-        ])
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const [categoriesRes, itemsRes] = await Promise.all([
+        fetch('/api/categories', { cache: 'no-store' }),
+        fetch('/api/menu-items', { cache: 'no-store' }),
+      ])
 
-        const categoriesData = await categoriesRes.json()
-        const itemsData = await itemsRes.json()
+      const categoriesText = await categoriesRes.text()
+      const itemsText = await itemsRes.text()
 
-        const fetchedCategories = Array.isArray(categoriesData) ? categoriesData : []
-        const fetchedItems = Array.isArray(itemsData) ? itemsData : []
+      const categoriesData = categoriesText ? JSON.parse(categoriesText) : []
+      const itemsData = itemsText ? JSON.parse(itemsText) : []
 
-        setCategories(fetchedCategories)
-        setItems(fetchedItems)
+      const fetchedCategories = Array.isArray(categoriesData) ? categoriesData : []
+      const fetchedItems = Array.isArray(itemsData) ? itemsData : []
 
-        // If currently selected category no longer exists, reset to "All"
-        setSelectedCategory((prevSelected) => {
-          if (prevSelected !== null && !fetchedCategories.some((cat) => cat.id === prevSelected)) {
-            return null
-          }
+      setCategories(fetchedCategories)
+      setItems(fetchedItems)
+
+      setSelectedCategory((prevSelected) => {
+        if (prevSelected !== null && !fetchedCategories.some((cat) => cat.id === prevSelected)) {
+          return null
+        }
           return prevSelected
-        })
-      } catch (error) {
-        console.error('Error fetching menu:', error)
-        setCategories([])
-        setItems([])
-      } finally {
-        setLoading(false)
-      }
+      })
+    } catch (error) {
+      console.error('Error fetching menu:', error)
+      setCategories([])
+      setItems([])
+    } finally {
+      setLoading(false)
     }
+  }
 
-    fetchData()
-  }, [])
+  fetchData()
+}, [])
 
   // Create a set of valid category IDs to filter out orphaned items
   const validCategoryIds = new Set(categories.map((c) => c.id))

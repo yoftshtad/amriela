@@ -1,22 +1,16 @@
-import { createClient } from '@/lib/supabase/server'
+import { db } from '@/lib/turso'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const supabase = await createClient()
-
-    const { data, error } = await supabase
-      .from('menu_items')
-      .select('id, category_id, name, description, price, image_url')
-      .order('name', { ascending: true })
-
-    if (error) {
-      throw error
-    }
-
-    return Response.json(data)
+    const result = await db.execute('SELECT * FROM menu_items ORDER BY id ASC')
+    // Convert Turso rows to plain JS objects
+    const items = result.rows.map((row) => ({ ...row }))
+    return Response.json(items)
   } catch (error) {
     console.error('Error fetching menu items:', error)
-    return Response.json({ error: 'Failed to fetch menu items' }, { status: 500 })
+    return Response.json([])
   }
 }
 
@@ -25,38 +19,20 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { category_id, name, description, price, image_url } = body
 
-    if (!category_id || !name || !price) {
-      return Response.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
+    if (!category_id || !name || price === undefined) {
+      return Response.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const supabase = await createClient()
+    const result = await db.execute({
+      sql: `INSERT INTO menu_items (category_id, name, description, price, image_url) 
+            VALUES (?, ?, ?, ?, ?) RETURNING *`,
+      args: [category_id, name, description || '', price, image_url || '/favicon.jpg'],
+    })
 
-    const { data, error } = await supabase
-      .from('menu_items')
-      .insert([
-        {
-          category_id,
-          name,
-          description,
-          price,
-          image_url,
-        },
-      ])
-      .select()
-
-    if (error) {
-      throw error
-    }
-
-    return Response.json(data[0])
+    const item = result.rows[0] ? { ...result.rows[0] } : null
+    return Response.json({ success: true, item })
   } catch (error) {
-    console.error('Error creating menu item:', error)
-    return Response.json(
-      { error: 'Failed to create menu item' },
-      { status: 500 }
-    )
+    console.error('Error adding menu item:', error)
+    return Response.json({ error: 'Failed to add menu item' }, { status: 500 })
   }
 }

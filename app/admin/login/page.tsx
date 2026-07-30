@@ -68,11 +68,11 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@cafe.com"
+                placeholder="Enter email"
                 className="w-full px-4 py-2 border border-[#444444] bg-[#333333] text-[#fff5e4] placeholder-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffbc26]"
                 required
               />
-              <p className="text-xs text-[#999999] mt-1">Demo: admin@cafe.com</p>
+              
             </div>
 
             <div>
@@ -84,11 +84,11 @@ export default function AdminLoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="password"
+                placeholder="Enter password"
                 className="w-full px-4 py-2 border border-[#444444] bg-[#333333] text-[#fff5e4] placeholder-[#999999] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ffbc26]"
                 required
               />
-              <p className="text-xs text-[#999999] mt-1">Demo: password123</p>
+              
             </div>
 
             <button
@@ -100,16 +100,7 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Demo Credentials Note */}
-          <div className="mt-6 p-4 bg-[#333333] border border-[#444444] rounded-lg">
-            <p className="text-xs text-[#fff5e4]">
-              <strong>Demo credentials:</strong>
-              <br />
-              Email: admin@cafe.com
-              <br />
-              Password: password123
-            </p>
-          </div>
+      
 
           {/* Back Button */}
           <div className="mt-6">
