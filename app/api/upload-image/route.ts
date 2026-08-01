@@ -10,7 +10,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Upload file directly to Vercel Blob Storage
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      console.error('Missing BLOB_READ_WRITE_TOKEN')
+      return NextResponse.json(
+        { error: 'Vercel Blob token is missing in Environment Variables. Please redeploy your Vercel project.' },
+        { status: 500 }
+      )
+    }
+
     const blob = await put(file.name, file, {
       access: 'public',
     })
@@ -18,12 +25,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       filename: file.name,
-      path: blob.url, // Returns the public CDN URL of the uploaded image
+      path: blob.url,
     })
   } catch (error) {
-    console.error('Upload error:', error)
+    console.error('Upload error detail:', error)
+    const message = error instanceof Error ? error.message : 'Failed to upload image'
     return NextResponse.json(
-      { error: 'Failed to upload image' },
+      { error: message },
       { status: 500 }
     )
   }
