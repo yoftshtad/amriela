@@ -18,8 +18,16 @@ export async function PUT(
     await db.execute({
       sql: `UPDATE menu_items 
             SET category_id = ?, name = ?, description = ?, price = ?, image_url = ?
-            WHERE id = ?`,
-      args: [Number(category_id), name, description || '', Number(price), image_url || '/favicon.jpg', itemId],
+            WHERE id = ? OR id = ?`,
+      args: [
+        Number(category_id),
+        name,
+        description || '',
+        Number(price),
+        image_url || '/favicon.jpg',
+        itemId,
+        String(itemId),
+      ],
     })
 
     return Response.json({ success: true })
@@ -42,8 +50,8 @@ export async function DELETE(
     }
 
     await db.execute({
-      sql: 'DELETE FROM menu_items WHERE id = ?',
-      args: [itemId],
+      sql: 'DELETE FROM menu_items WHERE id = ? OR id = ?',
+      args: [itemId, String(itemId)],
     })
 
     return Response.json({ success: true })

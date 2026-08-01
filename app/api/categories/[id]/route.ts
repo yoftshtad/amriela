@@ -6,15 +6,15 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    const categoryId = parseInt(id)
+    const categoryId = parseInt(id, 10)
 
     if (isNaN(categoryId)) {
       return Response.json({ error: 'Invalid category ID' }, { status: 400 })
     }
 
     await db.execute({
-      sql: 'DELETE FROM menu_categories WHERE id = ?',
-      args: [categoryId],
+      sql: 'DELETE FROM menu_categories WHERE id = ? OR id = ?',
+      args: [categoryId, String(categoryId)],
     })
 
     return Response.json({ success: true })
