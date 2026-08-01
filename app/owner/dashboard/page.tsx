@@ -176,7 +176,7 @@ export default function OwnerDashboard() {
   }
 
   const handleEditClick = (item: MenuItem) => {
-    setEditingId(item.id)
+    setEditingId(Number(item.id))
     setFormData({
       category_id: item.category_id.toString(),
       name: item.name,
@@ -260,7 +260,7 @@ export default function OwnerDashboard() {
     if (!confirm('Are you sure you want to delete this item?')) return
 
     try {
-      const response = await fetch(`/api/menu-items/${itemId}`, {
+      const response = await fetch(`/api/menu-items/${Number(itemId)}`, {
         method: 'DELETE',
       })
 
@@ -271,7 +271,7 @@ export default function OwnerDashboard() {
       }
 
       setMessage('Item deleted successfully!')
-      if (editingId === itemId) {
+      if (editingId === Number(itemId)) {
         handleCancelEdit()
       }
       fetchData()
@@ -316,7 +316,7 @@ export default function OwnerDashboard() {
       setConfirmOwnerPassword('')
       fetchAccountDetails()
 
-      // Log out owner only if their password was changed
+      // Log out owner ONLY if their password was changed
       if (newOwnerPassword && newOwnerPassword.trim().length > 0) {
         setOwnerMessage('Owner password updated successfully! Logging out...')
         setTimeout(async () => {
@@ -606,7 +606,7 @@ export default function OwnerDashboard() {
                 <div className="space-y-4 max-h-[calc(100vh-220px)] overflow-y-auto">
                   {items.map((item) => {
                     const category = categories.find((c) => Number(c.id) === Number(item.category_id))
-                    const isBeingEdited = editingId === item.id
+                    const isBeingEdited = editingId !== null && Number(editingId) === Number(item.id)
                     const numPrice = Number(item.price) || 0
 
                     return (

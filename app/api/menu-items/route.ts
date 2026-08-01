@@ -5,8 +5,15 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
   try {
     const result = await db.execute('SELECT * FROM menu_items ORDER BY id ASC')
-    // Convert Turso rows to plain JS objects
-    const items = result.rows.map((row) => ({ ...row }))
+    
+    // Explicitly parse and normalize numeric IDs, category_ids, and prices
+    const items = result.rows.map((row) => ({
+      ...row,
+      id: Number(row.id),
+      category_id: Number(row.category_id),
+      price: Number(row.price) || 0,
+    }))
+
     return Response.json(items)
   } catch (error) {
     console.error('Error fetching menu items:', error)
@@ -26,10 +33,10 @@ export async function POST(request: Request) {
     const result = await db.execute({
       sql: `INSERT INTO menu_items (category_id, name, description, price, image_url) 
             VALUES (?, ?, ?, ?, ?) RETURNING *`,
-      args: [category_id, name, description || '', price, image_url || '/favicon.jpg'],
+      args: [Number(category_id), name, description || '', Number(price), image_url || '/favicon.jpg'],
     })
 
-    const item = result.rows[0] ? { ...result.rows[0] } : null
+    const item = result.rows[0] ? { ...result.rows[0], id: Number(result.rows[0].id) } : null
     return Response.json({ success: true, item })
   } catch (error) {
     console.error('Error adding menu item:', error)

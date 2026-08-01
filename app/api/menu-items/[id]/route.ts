@@ -6,7 +6,7 @@ export async function PUT(
 ) {
   try {
     const { id } = await params
-    const itemId = parseInt(id)
+    const itemId = parseInt(id, 10)
 
     if (isNaN(itemId)) {
       return Response.json({ error: 'Invalid item ID' }, { status: 400 })
@@ -19,7 +19,7 @@ export async function PUT(
       sql: `UPDATE menu_items 
             SET category_id = ?, name = ?, description = ?, price = ?, image_url = ?
             WHERE id = ?`,
-      args: [category_id, name, description || '', price, image_url || '/favicon.jpg', itemId],
+      args: [Number(category_id), name, description || '', Number(price), image_url || '/favicon.jpg', itemId],
     })
 
     return Response.json({ success: true })
@@ -35,7 +35,7 @@ export async function DELETE(
 ) {
   try {
     const { id } = await params
-    const itemId = parseInt(id)
+    const itemId = parseInt(id, 10)
 
     if (isNaN(itemId)) {
       return Response.json({ error: 'Invalid item ID' }, { status: 400 })
